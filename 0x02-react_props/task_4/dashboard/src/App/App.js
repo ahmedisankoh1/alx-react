@@ -1,26 +1,31 @@
 import React from "react";
-import CourseListRow from "./CourseListRow";
-import { shallow } from "enzyme";
+import Notifications from "../Notifications/Notifications";
+import Header from "../Header/Header";
+import Login from "../Login/Login";
+import Footer from "../Footer/Footer";
+import CourseList from "../CourseList/CourseList";
+import PropTypes from "prop-types";
+import "./App.css";
 
-describe("Course List Row component test", () => {
-  it("should render without crashing", () => {
-    const wrapper = shallow(<CourseListRow textFirstCell="test" />);
+function App(isLoggedIn) {
+  return (
+    <React.Fragment>
+      <Notifications />
+      <div className="App">
+        <Header />
+        {isLoggedIn ? <CourseList /> : <Login />}
+        <Footer />
+      </div>
+    </React.Fragment>
+  );
+}
 
-    expect(wrapper.exists()).toBe(true);
-  });
+App.defaultProps = {
+  isLoggedIn: false,
+};
 
-  it("should render one cell with colspan = 2 when textSecondCell null", () => {
-    const wrapper = shallow(<CourseListRow isHeader={true} textFirstCell="test" textSecondCell={null} />);
+App.propTypes = {
+  isLoggedIn: PropTypes.bool,
+};
 
-    expect(wrapper.find("tr").children()).toHaveLength(1);
-    expect(wrapper.find("tr").childAt(0).html()).toEqual('<th colSpan="2">test</th>');
-  });
-
-  it("should render two cells when textSecondCell not null", () => {
-    const wrapper = shallow(<CourseListRow isHeader={false} textFirstCell="test" textSecondCell="test" />);
-
-    expect(wrapper.find("tr").children()).toHaveLength(2);
-    expect(wrapper.find("tr").childAt(0).html()).toEqual("<td>test</td>");
-    expect(wrapper.find("tr").childAt(1).html()).toEqual("<td>test</td>");
-  });
-});
+export default App;
